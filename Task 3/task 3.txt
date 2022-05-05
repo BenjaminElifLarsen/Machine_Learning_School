@@ -1,0 +1,13 @@
+red/blue dragon kills seems to be 0 most of the time, if not all.
+matchId is most likely useless, since it is just an id.
+
+what could have high correlation
+gold and minion kills (I think killing minions gives gold)
+gold and wins (gold can buy stuff to help win and get more kills with)
+level and champion kills (gain experience from killing other players)
+gold/minion
+gold/win
+minon/win
+level/champion
+level/win
+champion/level
