@@ -47,7 +47,7 @@
 #        0.94      0.94      0.94       430 weighted avg
 #As it can be seen, removing 105 rows from the training set did not really devalue the classifer by much.
 #Interesting the recall/precision is not mirrowed over the two classes like it was in the other tests.
-#After running the test again it ended up being mirrowed, but the values had changed.
+#After running the test again it ended up being mirrowed, but the values had changed. The SGDClassifier is by default run 1000 times on the training data and only if there had not been any improvement for 5 runs. 
 #Test accuracy 0.9348837209302325
 #        precision recall    f1-score   support
 #0       0.95      0.93      0.94       215
