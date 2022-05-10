@@ -59,11 +59,14 @@
 #This could indicate the training set could benefit from being bigger. However, running some of the other tests again indicates it happens to them to. It is important to notice the same rows are selected in each run of each test.
 #This does not change it could be a problem with the size of the training set. In all cases the results are fairly stable with only minor changes in few of the runs.
 
+#An improvement could be to select the test and training data randomly out from the the full dataframe. The reason for this is to get around that some ham and spam might be more, or less, similar to eachothers than other instances.  
+
 from sklearn import preprocessing
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model  import SGDClassifier
 from sklearn.metrics import classification_report
+from sklearn.model_selection import train_test_split
 import pandas as pd
 import numpy as np
 
@@ -113,3 +116,8 @@ pred_test = pipeline.predict(testDataSet)
 pred_train = pipeline.predict(trainingDataSet)
 print("test accuracy", str(np.mean(pred_test == testDataSetCategory)))
 print(classification_report(testDataSetCategory, pred_test))
+
+#How a random selection would be done
+#x_train, x_test, y_train, y_test = train_test_split(dfFullSet["message"], dfFullSet["category_encoded"], test_size=splitValue, stratify=dfFullSet["category_encoded"], random_state=5)
+
+
