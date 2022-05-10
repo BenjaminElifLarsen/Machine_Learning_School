@@ -67,9 +67,10 @@ from sklearn.pipeline import Pipeline
 from sklearn.linear_model  import SGDClassifier
 from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 import pandas as pd
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 dfFullSet = pd.read_csv("dataSmall.csv", index_col=False)
 dfFullSet["category_encoded"] = preprocessing.LabelEncoder().fit_transform(dfFullSet["category"])
@@ -117,7 +118,14 @@ pred_train = pipeline.predict(trainingDataSet)
 print("test accuracy", str(np.mean(pred_test == testDataSetCategory)))
 print(classification_report(testDataSetCategory, pred_test))
 
+
+cm = confusion_matrix(testDataSetCategory, pred_test, labels=pipeline.classes_)
+disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=pipeline.classes_)
+disp.plot()
+plt.show()
+
+
 #How a random selection would be done
-#x_train, x_test, y_train, y_test = train_test_split(dfFullSet["message"], dfFullSet["category_encoded"], test_size=splitValue, stratify=dfFullSet["category_encoded"], random_state=5)
+#x_train, x_test, y_train, y_test = train_test_split(dfFullSet["message"], dfFullSet["category_encoded"], train_size=splitValue, stratify=dfFullSet["category_encoded"], random_state=5)
 
 
