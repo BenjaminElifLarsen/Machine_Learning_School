@@ -5,7 +5,7 @@
 #It was decided to use scikit as the machine learning framework as it could use stochastic gradient decent and support vector machine.  
 #The SGD is a linear classifier.
 #The support vector mahcine is a set of supervised learning methods, that uses classication, regression, and outliers detection.
-#The success rate should be as high as possible, but would, for this study, only be considered good if it had a success rate of 90 %.
+#The success rate should be as high as possible, but would, for this study, only be considered good if it had a success rate of 95 %.
 
 #For all tests an even amount of rows of ham and spam were selected, e.g. a selection value of 100 indicates 100 spam and 100 ham rows were selected.
 
