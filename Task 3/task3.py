@@ -40,6 +40,6 @@ h2 = sns.histplot(data=dfRedWin[["redAvgLevel","blueAvgLevel"]], color=['r','b']
 h3 = sns.histplot(data=dfTest[["redAvgLevel","blueAvgLevel"]], color=['r','b'], palette=["red",'blue'], shrink=8, multiple="dodge", ax=ax[2]).set(title='Both Wins',xlim=(1,12))
 
 
-#g = sns.catplot(col="blue_win",data=dfTest, kind="box", palette=["red",'blue'], height=4, aspect=.7)
+g = sns.catplot(col="blue_win",data=dfTest, kind="box", palette=["red",'blue'], height=4, aspect=.7)
 
 plt.show()
