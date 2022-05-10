@@ -112,16 +112,18 @@ pipeline = Pipeline([("tfidf_vector_com", TfidfVectorizer(
                tol=0.001
                ))
           ])
+
 pipeline.fit(trainingDataSet["message"],trainingDataSet["category_encoded"])
 pred_test = pipeline.predict(testDataSet)
 pred_train = pipeline.predict(trainingDataSet)
+
 print("test accuracy", str(np.mean(pred_test == testDataSetCategory)))
 print(classification_report(testDataSetCategory, pred_test))
 
-
+fig, ax = plt.subplots(1,1)
 cm = confusion_matrix(testDataSetCategory, pred_test, labels=pipeline.classes_)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=pipeline.classes_)
-disp.plot()
+disp.plot(ax=ax)
 plt.show()
 
 
