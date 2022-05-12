@@ -1,0 +1,17 @@
+Identity birds out from their songs.
+
+Using Non-negative Matrix Factorisation (NMF).
+
+Firstly it is trained on the spectrogram of multiple birds to generate the needed atom matrixs for each species.
+All of the atoms are then added together to a single matrix, a corpus, that will be used for the testing. 
+This will mean that the NMF will apply the atoms that it thinks are most fitting the current spectrogram. 
+Since it is known which atoms and their activations belong to which bird species it is possible to give the atoms and activations a to a classifier. 
+
+
+
+--Problems--
+
+It is hard to say how many atoms it will need in the training and testing
+Looking at some spectrograms there do not seem to be obvious number.
+
+Some of the 
