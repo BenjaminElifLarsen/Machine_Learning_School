@@ -2,6 +2,14 @@ Case:
 Identity birds using features extracted from bird songs. 
 
 
+The features given in the dataset, see the first link under 'Dataset' are the species and chroma features, called chromagram.
+A chromagram is related to Westen music and is related to the  different pitch classes. A pitch class is all pitches that are a whole of octaves apart, e.g. all C's or H's. 
+
+
+Given that the features are extracted as chromagrams it seems that the author considered that bird songs would follow Westen music, which may not be the case, regarding timbre and harmonics. 
+
+
+Features that could be added by analysing the original files: 
 
 
 
@@ -21,4 +29,5 @@ This corpus would then be fed to a NMF, thus it being supervised, together with 
 This will return the atoms, and also a new matrix of activations. 
 This activation matrix will let us know which atoms are active and since it is known which atoms belong to which species it should be possible to identity the birds.
 The problem is just how to best fed this data to a classifer, since we do not have an activation matrix for the training set.
+
  
