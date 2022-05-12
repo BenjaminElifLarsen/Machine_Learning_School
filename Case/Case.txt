@@ -1,0 +1,24 @@
+Case:
+Identity birds using features extracted from bird songs. 
+
+
+
+
+
+Dataset:
+https://www.kaggle.com/datasets/fleanend/birds-songs-numeric-dataset
+which is based upon
+https://www.kaggle.com/datasets/rtatman/british-birdsong-dataset
+
+To do:
+If given enough time extract the features by self.
+Also, try and figure out a way to identity birds using non-negative matrix factorisation.
+The problem that was encounted with the NMF was figuring a good way to do the classification.
+The NMF would generate atoms, W, and activations, H, that is the estimated spectrogram of the original spectrogram.
+The idea was to group all songs together by species and run them through an unsupervised NMF. 
+Then add all the atoms, over all species, together to create a bird song atom corpus. 
+This corpus would then be fed to a NMF, thus it being supervised, together with unknown bird song spectrograms (one at a time).
+This will return the atoms, and also a new matrix of activations. 
+This activation matrix will let us know which atoms are active and since it is known which atoms belong to which species it should be possible to identity the birds.
+The problem is just how to best fed this data to a classifer, since we do not have an activation matrix for the training set.
+ 
