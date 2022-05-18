@@ -1,8 +1,8 @@
-# Bird Song Analysis and Classification.
-#
+# - Bird Song Analysis and Classification. -
+
 # Features are pre-extracted as chromagrams.
 # Identifier is the species of the birds.
-# 
+
 # The dataset was pre-preperated into a training and testing set.
 # The testing set did not contain entites for all specicies in the training set.
 # The training set contained more entities of specific species than other species.
@@ -10,15 +10,14 @@
 # Thus it was decided to:
 # - Firstly, try the algorithmes with the prepared datasets.
 # - Secondly, to combine the training and testing set and randomly create new sets.
-#
+
 # The algoritmes used were:
 # K-nearest neighbours.
 # Linear Stochastic Gradient Desent.
 # Linear Support Vector Classication.
 # Support Vector Classification with Linear Kernal.
 #
-#
-#
+
 # The two datasets each consists of 172 columns.
 # - One column 'id' which will not be used since it is not a feature nor can be used for labelling.
 # - One column 'species', which could act as a label column.
@@ -32,12 +31,17 @@
 # The testing set consists of 16626 rows of birds. 
 # Regarding the columns 'genus' and 'species' there are species, in different genus, that share their names and cases of multiple species under the same genus.
 # Thus it was decided to create a new column 'genus_species', consisting of the combine genus and species names, which will be use it for the labelling.
-#
+
 
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
+
+#-- Settings --
+pd.set_option('display.max_columns', None)
+#pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
+
 
 #-- Data Loading -- 
 dfTrainingSet = pd.read_csv("train.csv", index_col=False);
@@ -47,12 +51,11 @@ dfTestingSet.pop("id")
 
 
 #-- Dataset Presentation --
-#pd.set_option('display.max_columns', None)
-#print(dfTrainingSet)
-#print(dfTestingSet)
-#print(dfTrainingSet.describe())
-#print(dfTestingSet.describe())
-#pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
+print("DataSet Desciptions:")
+print("\nTraining:")
+print(dfTrainingSet.describe())
+print("\nTesting:")
+print(dfTestingSet.describe())
 #print(dfTrainingSet.groupby(['genus','species'])['genus','species'].size())
 #print(dfTestingSet.groupby(['genus','species'])['genus','species'].size())
 
@@ -63,36 +66,44 @@ dfTrainingSet.pop("genus")
 dfTrainingSet.pop("species")
 dfTestingSet.pop("genus")
 dfTestingSet.pop("species")
-#print(dfTrainingSet["genus_species"])
-#print(dfTestingSet["genus_species"])
+pd.set_option('display.max_rows', None)
+print("\nGenus Species:")
+print("\nTraining:")
+print(*dfTrainingSet["genus_species"].unique(),sep='\n')
+print("\nTesting:")
+print(*dfTestingSet["genus_species"].unique(),sep='\n')
+# As it can be seen a single bird species is missing from the testing set compared to the training set. 
 
 #-- Get Features --
 features = list(dfTrainingSet.columns)
 features.remove("genus_species")
-#print(features)
+print("\nFeatures:")
+pd.set_option('display.max_rows', None)
+print(features)
 
 #-- Plot the Datasets --
 fig1, ax1 = plt.subplots()
-fig1.subplots_adjust(bottom=0.25)
+fig1.subplots_adjust(bottom=0.28)
 fig1.set_size_inches(20, 10)
 dfTrainingSet["genus_species"].value_counts().plot.bar(ax=ax1)
 plt.setp(ax1.get_xticklabels(), rotation=90)
 
 fig2, ax2 = plt.subplots()
-fig2.subplots_adjust(bottom=0.25)
+fig2.subplots_adjust(bottom=0.28)
 fig2.set_size_inches(20, 10)
 dfTestingSet["genus_species"].value_counts().plot.bar(ax=ax2)
 plt.setp(ax2.get_xticklabels(), rotation=90)
 
 # As it can seen the training set consists of 20 entities for each species.
 # This could be on the low size as some birds have multiple songs and warning sounds compare to others.
-# The testing set displays the inbalance clearly, given there are around 1700 Alauda Arvensis and only three Perdix Perdix.
+# The testing set displays the inbalance clearly, given there are 1711 Alauda Arvensis and only three Perdix Perdix.
 # This is a realistic and expected problem as the data is from donated recordings and people are more likely to record songs of specific birds,
 # e.g. Alauda Arvensis is much more common bird than Perdix Perdix, while some birds are more likely to sing than others and on different parts of the year. 
 
 #-- Heat Map --
 figHeat, axHeat = plt.subplots(1)
-#figHeat.set_size_inches(30, 30)
+figHeat.subplots_adjust(bottom=0.3)
+figHeat.set_size_inches(10, 40)
 dfBird = dfTrainingSet[features]
 birdCorr = dfBird.corr(method="spearman")
 birdMask = np.triu(np.ones_like(birdCorr, dtype=bool))
@@ -165,7 +176,7 @@ sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat).set(title='Bird Song
 
 
 
-plt.tight_layout()
+#plt.tight_layout()
 
 plt.show()
 
