@@ -12,6 +12,10 @@
 # - Secondly, to combine the training and testing set and randomly create new sets.
 #
 # The algoritmes used were:
+# K-nearest neighbours.
+# Linear Stochastic Gradient Desent.
+# Linear Support Vector Classication.
+# Support Vector Classification with Linear Kernal.
 #
 #
 #
@@ -32,6 +36,8 @@
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 
 #-- Data Loading -- 
 dfTrainingSet = pd.read_csv("train.csv", index_col=False);
@@ -41,12 +47,12 @@ dfTestingSet.pop("id")
 
 
 #-- Dataset Presentation --
-pd.set_option('display.max_columns', None)
+#pd.set_option('display.max_columns', None)
 #print(dfTrainingSet)
 #print(dfTestingSet)
 #print(dfTrainingSet.describe())
 #print(dfTestingSet.describe())
-pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
+#pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
 #print(dfTrainingSet.groupby(['genus','species'])['genus','species'].size())
 #print(dfTestingSet.groupby(['genus','species'])['genus','species'].size())
 
@@ -57,8 +63,8 @@ dfTrainingSet.pop("genus")
 dfTrainingSet.pop("species")
 dfTestingSet.pop("genus")
 dfTestingSet.pop("species")
-print(dfTrainingSet["genus_species"])
-print(dfTestingSet["genus_species"])
+#print(dfTrainingSet["genus_species"])
+#print(dfTestingSet["genus_species"])
 
 #-- Get Features --
 features = list(dfTrainingSet.columns)
@@ -67,18 +73,111 @@ features.remove("genus_species")
 
 #-- Plot the Datasets --
 fig1, ax1 = plt.subplots()
+fig1.subplots_adjust(bottom=0.25)
+fig1.set_size_inches(20, 10)
 dfTrainingSet["genus_species"].value_counts().plot.bar(ax=ax1)
-fig2, ax2 = plt.subplots()
-dfTestingSet["genus_species"].value_counts().plot.bar(ax=ax2)
-plt.show()
-# As it can seen the training set consists of 20 entities for each species.
-# The testing set display the inbalance clearly given there are around 1700 Alauda Arvensis and only three Perdix Perdix.
-# This is a realistic problem as the data is from donated recordings and people are more likely to record songs of specific birds, e.g. Alauda Arvensis is much more common bird than Perdix Perdix, while some birds are more likely to sing than others. 
+plt.setp(ax1.get_xticklabels(), rotation=90)
 
-#--  --
-#--  --
-#--  --
-#--  --
+fig2, ax2 = plt.subplots()
+fig2.subplots_adjust(bottom=0.25)
+fig2.set_size_inches(20, 10)
+dfTestingSet["genus_species"].value_counts().plot.bar(ax=ax2)
+plt.setp(ax2.get_xticklabels(), rotation=90)
+
+# As it can seen the training set consists of 20 entities for each species.
+# This could be on the low size as some birds have multiple songs and warning sounds compare to others.
+# The testing set displays the inbalance clearly, given there are around 1700 Alauda Arvensis and only three Perdix Perdix.
+# This is a realistic and expected problem as the data is from donated recordings and people are more likely to record songs of specific birds,
+# e.g. Alauda Arvensis is much more common bird than Perdix Perdix, while some birds are more likely to sing than others and on different parts of the year. 
+
+#-- Heat Map --
+figHeat, axHeat = plt.subplots(1)
+#figHeat.set_size_inches(30, 30)
+dfBird = dfTrainingSet[features]
+birdCorr = dfBird.corr(method="spearman")
+birdMask = np.triu(np.ones_like(birdCorr, dtype=bool))
+sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat).set(title='Bird Song Features')
+
+# The heatmap indicates that there is no correlation between the spectrogram centroids and the chromograms, which is as expected.
+# Regarding the chromograms there is overall a high correlation between the frames of the same pitch classes.
+# Interesting enough there seems to be a high correlation between a pitch class and the pitch class before it and chromogram 0 correlates hightly with the following chromograms 11, 1, and 2.
+
+
+
+#-- Classifiers --
+
+#--- K-nearest Neighbour ---
+
+#---- Result ----
+##print out test accuracy and classication report here
+
+#---- Confusion Matrix ----
+
+
+#--- Linear Stochastic Gradient Desent ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+#--- Linear Support Vector Classication ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+#--- Support Vector Classification with Linear Kernal ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+
+
+plt.tight_layout()
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
 
 
 
