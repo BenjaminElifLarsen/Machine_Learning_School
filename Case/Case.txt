@@ -3,11 +3,13 @@ Identity birds using features extracted from bird songs.
 
 
 The features given in the dataset, see the first link under 'Dataset' are the species and chroma features, called chromagram.
-A chromagram is related to Westen music and is related to the  different pitch classes. A pitch class is all pitches that are a whole of octaves apart, e.g. all C's or H's. 
-
+A chromagram is related to Westen music and is related to the different pitch classes. A pitch class is all pitches that are a whole of octaves apart, e.g. all C's or H's. 
+Another feature is spec_centr, which are spectral centroid. This feature indicates the 'center of mass' of a spectrogram, is considered related to the 'brightness' of a sound, and it is calculated as the weighted mean of the frequencies in the signal using a FT, with the magnitudes as the weights.
 
 Given that the features are extracted as chromagrams it seems that the author considered that bird songs would follow Westen music, which may not be the case, regarding timbre and harmonics. 
+The spectral centroid is also related to the musical timbre. 
 
+In total there are 172 columns in the dataset with the last column being the species used as the label. 
 
 Features that could be added by analysing the original files: 
 
