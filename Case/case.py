@@ -41,12 +41,12 @@ dfTestingSet.pop("id")
 
 
 #-- Dataset Presentation --
-#pd.set_option('display.max_columns', None)
+pd.set_option('display.max_columns', None)
 #print(dfTrainingSet)
 #print(dfTestingSet)
 #print(dfTrainingSet.describe())
 #print(dfTestingSet.describe())
-#pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
+pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
 #print(dfTrainingSet.groupby(['genus','species'])['genus','species'].size())
 #print(dfTestingSet.groupby(['genus','species'])['genus','species'].size())
 
@@ -57,9 +57,28 @@ dfTrainingSet.pop("genus")
 dfTrainingSet.pop("species")
 dfTestingSet.pop("genus")
 dfTestingSet.pop("species")
-#print(dfTrainingSet["genus_species"])
-#print(dfTestingSet["genus_species"])
+print(dfTrainingSet["genus_species"])
+print(dfTestingSet["genus_species"])
 
+#-- Get Features --
+features = list(dfTrainingSet.columns)
+features.remove("genus_species")
+#print(features)
+
+#-- Plot the Datasets --
+fig1, ax1 = plt.subplots()
+dfTrainingSet["genus_species"].value_counts().plot.bar(ax=ax1)
+fig2, ax2 = plt.subplots()
+dfTestingSet["genus_species"].value_counts().plot.bar(ax=ax2)
+plt.show()
+# As it can seen the training set consists of 20 entities for each species.
+# The testing set display the inbalance clearly given there are around 1700 Alauda Arvensis and only three Perdix Perdix.
+# This is a realistic problem as the data is from donated recordings and people are more likely to record songs of specific birds, e.g. Alauda Arvensis is much more common bird than Perdix Perdix, while some birds are more likely to sing than others. 
+
+#--  --
+#--  --
+#--  --
+#--  --
 
 
 
