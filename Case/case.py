@@ -15,7 +15,8 @@
 #
 #
 #
-# The two datasets each consists of 171 columns.
+# The two datasets each consists of 172 columns.
+# - One column 'id' which will not be used since it is not a feature nor can be used for labelling.
 # - One column 'species', which could act as a label column.
 # - One column 'genus' wich could act as a label together with the species column.
 # - 13 columns with spectral centroid features, 0 - 12.
@@ -26,7 +27,7 @@
 # The training set consists of 1760 rows of birds.
 # The testing set consists of 16626 rows of birds. 
 # Regarding the columns 'genus' and 'species' there are species, in different genus, that share their names and cases of multiple species under the same genus.
-# Thus it was decided to create a new column, consisting of the combine genus and species names and use it for the labelling.
+# Thus it was decided to create a new column 'genus_species', consisting of the combine genus and species names, which will be use it for the labelling.
 #
 
 import pandas as pd
@@ -35,6 +36,8 @@ import matplotlib.pyplot as plt
 #-- Data Loading -- 
 dfTrainingSet = pd.read_csv("train.csv", index_col=False);
 dfTestingSet = pd.read_csv("test.csv", index_col=False);
+dfTrainingSet.pop("id")
+dfTestingSet.pop("id")
 
 
 #-- Dataset Presentation --
