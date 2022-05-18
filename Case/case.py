@@ -15,15 +15,18 @@
 #
 #
 #
-# The two datasets each consists of 172 columns.
-# - One column acted as the label, 'species', of the rows.
+# The two datasets each consists of 171 columns.
+# - One column 'species', which could act as a label column.
+# - One column 'genus' wich could act as a label together with the species column.
 # - 13 columns with spectral centroid features, 0 - 12.
 #   - The 0 - 12 is the amount of spectrogram frames.
-# - 158 columns with chromagram features, ranging from 0 - 11 and 0 - 12. Each bin consists of the normalised energy.
+# - 156 columns with chromagram features, ranging from 0 - 11 and 0 - 12. Each bin consists of the normalised energy.
 #   - The 0 - 11 is the amount of chroma bins, that is the 12 notes used in the Westen musical scale, that is from C to H.
 #   - The 0 - 12 is the amount of spectrogram frames for each chroma bin.
 # The training set consists of 1760 rows of birds.
 # The testing set consists of 16626 rows of birds. 
+# Regarding the columns 'genus' and 'species' there are species, in different genus, that share their names and cases of multiple species under the same genus.
+# Thus it was decided to create a new column, consisting of the combine genus and species names and use it for the labelling.
 #
 
 import pandas as pd
@@ -40,10 +43,19 @@ dfTestingSet = pd.read_csv("test.csv", index_col=False);
 #print(dfTestingSet)
 #print(dfTrainingSet.describe())
 #print(dfTestingSet.describe())
+#pd.set_option('display.max_rows', None) #This line will display every row and can freeze/crash the program if a lot of rows have to be displayed.
+#print(dfTrainingSet.groupby(['genus','species'])['genus','species'].size())
+#print(dfTestingSet.groupby(['genus','species'])['genus','species'].size())
 
-
-#--  --
-
+#-- Label Column --
+dfTrainingSet["genus_species"] = dfTrainingSet["genus"] + " " + dfTrainingSet["species"]
+dfTestingSet["genus_species"] = dfTestingSet["genus"] + " " + dfTestingSet["species"]
+dfTrainingSet.pop("genus")
+dfTrainingSet.pop("species")
+dfTestingSet.pop("genus")
+dfTestingSet.pop("species")
+#print(dfTrainingSet["genus_species"])
+#print(dfTestingSet["genus_species"])
 
 
 
