@@ -11,6 +11,10 @@ The spectral centroid is also related to the musical timbre.
 
 In total there are 172 columns in the dataset with the last column being the species used as the label. 
 
+From looking at different representations of the values in the columns, mean and std, none of the features seems like they could be excluded.
+A reason for this is most likely because of different specicies of birds having different frequencies in their songs. 
+Some of the chromagrams did contain very low numbers, both for mean and std, but there were still big differences between their minimum and maximum values, so it was decided to keep them.
+
 Features that could be added by analysing the original files: 
 
 
