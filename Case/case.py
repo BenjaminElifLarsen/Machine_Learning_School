@@ -44,6 +44,7 @@ from sklearn import preprocessing
 from sklearn.pipeline import make_pipeline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
 
 #-- Settings --
@@ -115,7 +116,11 @@ labelEncodedColumnName = label + "_encoded"
 dfCombined[labelEncodedColumnName] = le.transform(dfCombined[label])
 dfTrainingSet[labelEncodedColumnName] = le.transform(dfTrainingSet[label])
 dfTestingSet[labelEncodedColumnName] = le.transform(dfTestingSet[label])
-
+notEncodedLabel = le.inverse_transform(dfCombined[labelEncodedColumnName].unique())
+rangeValue = range(len(notEncodedLabel))
+print("\nEncoded Genus Species - Genus Species")
+for n in rangeValue:
+    print(str(n) + " : " + notEncodedLabel[n])
 
 #-- Plot the Datasets --
 fig1, ax1 = plt.subplots()
@@ -208,21 +213,21 @@ axK.set_title("K-nearest neighbors")
 
 
 #--- Linear Support Vector Classication ---
-clf = make_pipeline(StandardScaler(), LinearSVC( random_state=0, tol=1e-3))
+clf = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3))
 clf.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
 pred_test_clf = clf.predict(dfTestingSet[features])
 
 #---- Result ----
-print("\nK-Nearest Neighbour")
+print("\nLinear SVC")
 print("test accuracy", str(np.mean(pred_test_clf == dfTestingSet[labelEncodedColumnName])))
 print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_clf))
 
 #---- Confusion Matrix ----
 figClf, axClf = plt.subplots(1)
-cmClf = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_clf, labels=neigh.classes_)
-dispClf = ConfusionMatrixDisplay(confusion_matrix=cmClf, display_labels=neigh.classes_)
+cmClf = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_clf, labels=clf.classes_)
+dispClf = ConfusionMatrixDisplay(confusion_matrix=cmClf, display_labels=clf.classes_)
 dispClf.plot(ax=axClf)
-axClf.set_title("K-nearest neighbors")
+axClf.set_title("Linear SVC")
 
 
 #--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
