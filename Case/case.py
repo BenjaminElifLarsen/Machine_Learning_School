@@ -101,7 +101,7 @@ print(*features,sep='\n')
 
 #-- Combined Dataset and Splitting-- 
 dfCombined = pd.concat([dfTrainingSet,dfTestingSet])
-testPercent = 0.5
+testPercent = 0.25
 randomState = 4
 x_train, x_test, y_train, y_test = train_test_split(dfCombined, dfCombined[label], test_size=testPercent, stratify=dfCombined[label], random_state=randomState)
 print("\nX_train Genus Species:")
@@ -378,7 +378,7 @@ print("\nClassifications Own Traning- and Testingset")
 
 
 
-#--- ---
+#--- Gaussian Naive Bayes ---
 
 #---- Result ----
 
@@ -386,7 +386,7 @@ print("\nClassifications Own Traning- and Testingset")
 
 
 
-#--- ---
+#--- Decision Tree Classifier ---
 
 #---- Result ----
 
@@ -394,9 +394,15 @@ print("\nClassifications Own Traning- and Testingset")
 
 
 
-#--- ---
+#--- Multi-Layer Perceptron Neural Network ---
+mlpnn2 = MLPClassifier(random_state=randomState, max_iter=10000)
+mlpnn2.fit(x_train[features], y_train)
+pred_test_mlpnn2 = mlpnn2.predict(x_test[features])
 
 #---- Result ----
+print("\nMulti-Layer Perceptron Neural Network")
+print("test accuracy", str(np.mean(pred_test_mlpnn2 == y_test)))
+print(classification_report(y_test, pred_test_mlpnn2))
 
 #---- Confusion Matrix ----
 
