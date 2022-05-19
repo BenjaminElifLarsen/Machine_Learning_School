@@ -44,8 +44,11 @@ from sklearn import preprocessing
 from sklearn.pipeline import make_pipeline
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.tree import DecisionTreeClassifier
 
 #-- Settings --
 pd.set_option('display.max_columns', None)
@@ -199,6 +202,7 @@ plt.close(figHeat2)
 
 
 #-- Classifications Original Training- and Testingset --
+print("\nClassifications Original Training- and Testingset")
 
 #--- K-nearest Neighbour ---
 neigh = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
@@ -255,28 +259,58 @@ displsvc.plot(ax=axlsvc)
 axlsvc.set_title("Linear SVC")
 
 
-#--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
+#--- Support Vector Classification with Linear Kernal ---
+svclk = make_pipeline(StandardScaler(), SVC( kernel="linear", random_state=randomState, tol=1e-3))
+svclk.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_svclk = svclk.predict(dfTestingSet[features])
 
 #---- Result ----
+print("\nSVC Linear Kernel")
+print("test accuracy", str(np.mean(pred_test_svclk == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_svclk))
 
 #---- Confusion Matrix ----
+figsvclk, axsvclk = plt.subplots(1)
+cmsvclk = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_svclk, labels=lsvc.classes_)
+displaysvclk = ConfusionMatrixDisplay(confusion_matrix=cmsvclk, display_labels=lsvc.classes_)
+displaysvclk.plot(ax=axsvclk)
+axsvclk.set_title("SVC Linear Kernel")
 
 
-
-#--- ---
+#--- Gaussian Naive Bayes ---
+gnb = make_pipeline(StandardScaler(), GaussianNB())
+gnb.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_gnb = gnb.predict(dfTestingSet[features])
 
 #---- Result ----
-
+print("\nGaussian Naive Bayes")
+print("test accuracy", str(np.mean(pred_test_gnb == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_gnb))
+                    
 #---- Confusion Matrix ----
+figgnb, axgnb = plt.subplots(1)
+cmgnb = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_gnb, labels=gnb.classes_)
+displaygnb = ConfusionMatrixDisplay(confusion_matrix=cmgnb, display_labels=gnb.classes_)
+displaygnb.plot(ax=axgnb)
+axgnb.set_title("Gaussian Naive Bayes")
 
 
-
-#--- ---
+#--- Decision Tree Classifier ---
+dtc = DecisionTreeClassifier(random_state=randomState)
+dtc.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_dtc = dtc.predict(dfTestingSet[features])
 
 #---- Result ----
+print("\nDecision Tree Classifier")
+print("test accuracy", str(np.mean(pred_test_dtc == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_dtc))
 
 #---- Confusion Matrix ----
-
+figdtc, axdtc = plt.subplots(1)
+cmdtc = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_dtc, labels=dtc.classes_)
+displaydtc = ConfusionMatrixDisplay(confusion_matrix=cmdtc, display_labels=dtc.classes_)
+displaydtc.plot(ax=axdtc)
+axdtc.set_title("Decision Tree Classifier")
 
 
 #--- ---
@@ -298,6 +332,7 @@ axlsvc.set_title("Linear SVC")
 
 
 #-- Classifications Own Traning- and Testingset --
+print("\nClassifications Own Traning- and Testingset")
 
 #--- K-nearest Neighbour ---
 
@@ -324,7 +359,7 @@ axlsvc.set_title("Linear SVC")
 
 
 
-#--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
+#--- Support Vector Classification with Linear Kernal --- 
 
 #---- Result ----
 
@@ -364,7 +399,6 @@ axlsvc.set_title("Linear SVC")
 
 
 
-#plt.tight_layout()
 
 plt.show()
 
