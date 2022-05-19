@@ -107,6 +107,16 @@ print(*x_test[label].unique(),sep='\n')
 # As it can be seen here, the training set and the testing set contain the same bird species. 
 
 
+#-- Label Encoding for Fitting --
+le = preprocessing.LabelEncoder()
+le.fit(dfCombined[label])
+labelEncoded = le.transform(dfCombined[label])
+labelEncodedColumnName = label + "_encoded"
+dfCombined[labelEncodedColumnName] = le.transform(dfCombined[label])
+dfTrainingSet[labelEncodedColumnName] = le.transform(dfTrainingSet[label])
+dfTestingSet[labelEncodedColumnName] = le.transform(dfTestingSet[label])
+
+
 #-- Plot the Datasets --
 fig1, ax1 = plt.subplots()
 fig1.subplots_adjust(bottom=0.28)
@@ -168,26 +178,22 @@ sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird S
 # The combined dataset does not indicates any real difference in the correlations.
 
 
-#-- Label Encoding for Fitting -- 
-labelEncoded = preprocessing.LabelEncoder().fit_transform(dfTrainingSet[label])
-
 #-- Classifications Original Training- and Testingset --
 
 #--- K-nearest Neighbour ---
 neigh = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
-
-neigh.fit(dfTrainingSet[features], labelEncoded)
+neigh.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
 pred_test_k = neigh.predict(dfTestingSet[features])
 #pred_train_k = neigh.predict(dfTrainingSet[features])
 
 #---- Result ----
 print("\nK-Nearest Neighbour")
-print("test accuracy", str(np.mean(pred_test_k == labelEncoded)))
-print(classification_report(labelEncoded, pred_test_k))
+print("test accuracy", str(np.mean(pred_test_k == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_k))
 
 #---- Confusion Matrix ----
 figK, axK = plt.subplots(1)
-cmK = confusion_matrix(labelEncoded, pred_test_k, labels=neigh.classes_)
+cmK = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_k, labels=neigh.classes_)
 dispK = ConfusionMatrixDisplay(confusion_matrix=cmK, display_labels=neigh.classes_)
 dispK.plot(ax=axK)
 axK.set_title("K-nearest neighbors")
@@ -202,11 +208,21 @@ axK.set_title("K-nearest neighbors")
 
 
 #--- Linear Support Vector Classication ---
+clf = make_pipeline(StandardScaler(), LinearSVC( random_state=0, tol=1e-3))
+clf.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_clf = clf.predict(dfTestingSet[features])
 
 #---- Result ----
+print("\nK-Nearest Neighbour")
+print("test accuracy", str(np.mean(pred_test_clf == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_clf))
 
 #---- Confusion Matrix ----
-
+figClf, axClf = plt.subplots(1)
+cmClf = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_clf, labels=neigh.classes_)
+dispClf = ConfusionMatrixDisplay(confusion_matrix=cmClf, display_labels=neigh.classes_)
+dispClf.plot(ax=axClf)
+axClf.set_title("K-nearest neighbors")
 
 
 #--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
