@@ -158,15 +158,14 @@ plt.setp(ax4.get_xticklabels(), rotation=90)
 ax4.set_title("Genus - Species - Own Testing Data")
 
 
-
 #-- Plot the Heat Maps --
-figHeat, axHeat = plt.subplots(1)
-figHeat.subplots_adjust(bottom=0.3)
-figHeat.set_size_inches(10, 40)
+figHeat1, axHeat1 = plt.subplots(1)
+figHeat1.subplots_adjust(bottom=0.3)
+figHeat1.set_size_inches(40, 40)
 dfBird = dfTrainingSet[features]
 birdCorr = dfBird.corr(method="spearman")
 birdMask = np.triu(np.ones_like(birdCorr, dtype=bool))
-sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat).set(title='Bird Song Features - Training Set')
+sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat1).set(title='Bird Song Features - Training Set')
 
 # The heatmap indicates that there is no correlation between the spectrogram centroids and the chromograms, which is as expected.
 # Regarding the chromograms there is overall a high correlation between the frames of the same pitch classes.
@@ -174,13 +173,29 @@ sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat).set(title='Bird Song
 
 figHeat2, axHeat2 = plt.subplots(1)
 figHeat2.subplots_adjust(bottom=0.3)
-figHeat2.set_size_inches(10, 40)
+figHeat2.set_size_inches(40, 40)
 dfBird2 = dfCombined[features]
 birdCorr2 = dfBird2.corr(method="spearman")
 birdMask2 = np.triu(np.ones_like(birdCorr2, dtype=bool))
 sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird Song Features - Full Set')
 
 # The combined dataset does not indicates any real difference in the correlations.
+
+
+#-- Save Plots --
+fig1.savefig('.\\' + ax1.get_title())
+plt.close(fig1)
+fig2.savefig('.\\' + ax2.get_title())
+plt.close(fig2)
+fig3.savefig('.\\' + ax3.get_title())
+plt.close(fig3)
+fig4.savefig('.\\' + ax4.get_title())
+plt.close(fig4)
+
+figHeat1.savefig('.\\' + axHeat1.get_title())
+plt.close(figHeat1)
+figHeat2.savefig('.\\' + axHeat2.get_title())
+plt.close(figHeat2)
 
 
 #-- Classifications Original Training- and Testingset --
@@ -205,29 +220,39 @@ axK.set_title("K-nearest neighbors")
 
 
 #--- Linear Stochastic Gradient Desent ---
+lsgd = make_pipeline(StandardScaler(), SGDClassifier( random_state=randomState, tol=1e-3))
+lsgd.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_lsgd = lsgd.predict(dfTestingSet[features])
 
 #---- Result ----
+print("\nLinear SGD")
+print("test accuracy", str(np.mean(pred_test_lsgd == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_lsgd))
 
 #---- Confusion Matrix ----
-
+figlsgd, axlsgd = plt.subplots(1)
+cmlsgd = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_lsgd, labels=lsgd.classes_)
+displsgd = ConfusionMatrixDisplay(confusion_matrix=cmlsgd, display_labels=lsgd.classes_)
+displsgd.plot(ax=axlsgd)
+axlsgd.set_title("Linear SGD")
 
 
 #--- Linear Support Vector Classication ---
-clf = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3))
-clf.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
-pred_test_clf = clf.predict(dfTestingSet[features])
+lsvc = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3))
+lsvc.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_lsvc = lsvc.predict(dfTestingSet[features])
 
 #---- Result ----
 print("\nLinear SVC")
-print("test accuracy", str(np.mean(pred_test_clf == dfTestingSet[labelEncodedColumnName])))
-print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_clf))
+print("test accuracy", str(np.mean(pred_test_lsvc == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_lsvc))
 
 #---- Confusion Matrix ----
-figClf, axClf = plt.subplots(1)
-cmClf = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_clf, labels=clf.classes_)
-dispClf = ConfusionMatrixDisplay(confusion_matrix=cmClf, display_labels=clf.classes_)
-dispClf.plot(ax=axClf)
-axClf.set_title("Linear SVC")
+figlsvc, axlsvc = plt.subplots(1)
+cmlsvc = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_lsvc, labels=lsvc.classes_)
+displsvc = ConfusionMatrixDisplay(confusion_matrix=cmlsvc, display_labels=lsvc.classes_)
+displsvc.plot(ax=axlsvc)
+axlsvc.set_title("Linear SVC")
 
 
 #--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
