@@ -49,6 +49,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import SGDClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neural_network import MLPClassifier
 
 #-- Settings --
 pd.set_option('display.max_columns', None)
@@ -313,12 +314,22 @@ displaydtc.plot(ax=axdtc)
 axdtc.set_title("Decision Tree Classifier")
 
 
-#--- ---
+#--- Multi-Layer Perceptron Neural Network ---
+mlpnn = MLPClassifier(random_state=randomState, max_iter=10000)
+mlpnn.fit(dfTrainingSet[features], dfTrainingSet[labelEncodedColumnName])
+pred_test_mlpnn = mlpnn.predict(dfTestingSet[features])
 
 #---- Result ----
+print("\nMulti-Layer Perceptron Neural Network")
+print("test accuracy", str(np.mean(pred_test_mlpnn == dfTestingSet[labelEncodedColumnName])))
+print(classification_report(dfTestingSet[labelEncodedColumnName], pred_test_mlpnn))
 
 #---- Confusion Matrix ----
-
+figmlpnn, axmlpnn = plt.subplots(1)
+cmmlpnn = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_mlpnn, labels=mlpnn.classes_)
+displaymlpnn = ConfusionMatrixDisplay(confusion_matrix=cmmlpnn, display_labels=mlpnn.classes_)
+displaymlpnn.plot(ax=axmlpnn)
+axmlpnn.set_title("Multi-Layer Perceptron Neural Network")
 
 
 #--- ---
