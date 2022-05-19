@@ -38,7 +38,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn import preprocessing
+from sklearn.pipeline import make_pipeline
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import LinearSVC
+from sklearn.linear_model import SGDClassifier
 
 #-- Settings --
 pd.set_option('display.max_columns', None)
@@ -63,8 +69,9 @@ print(dfTestingSet.describe())
 
 
 #-- Label Column --
-dfTrainingSet["genus_species"] = dfTrainingSet["genus"] + " " + dfTrainingSet["species"]
-dfTestingSet["genus_species"] = dfTestingSet["genus"] + " " + dfTestingSet["species"]
+label = 'genus_species'
+dfTrainingSet[label] = dfTrainingSet["genus"] + " " + dfTrainingSet["species"]
+dfTestingSet[label] = dfTestingSet["genus"] + " " + dfTestingSet["species"]
 dfTrainingSet.pop("genus")
 dfTrainingSet.pop("species")
 dfTestingSet.pop("genus")
@@ -72,16 +79,16 @@ dfTestingSet.pop("species")
 pd.set_option('display.max_rows', None)
 print("\nGenus Species:")
 print("\nTraining:")
-print(*dfTrainingSet["genus_species"].unique(),sep='\n')
+print(*dfTrainingSet[label].unique(),sep='\n')
 print("\nTesting:")
-print(*dfTestingSet["genus_species"].unique(),sep='\n')
+print(*dfTestingSet[label].unique(),sep='\n')
 
 # As it can be seen a single bird species, Motacilla flava, is missing from the testing set compared to the training set. 
 
 
 #-- Get Features --
 features = list(dfTrainingSet.columns)
-features.remove("genus_species")
+features.remove(label)
 print("\nFeatures:")
 pd.set_option('display.max_rows', None)
 print(*features,sep='\n')
@@ -91,11 +98,11 @@ print(*features,sep='\n')
 dfCombined = pd.concat([dfTrainingSet,dfTestingSet])
 testPercent = 0.5
 randomState = 4
-x_train, x_test, y_train, y_test = train_test_split(dfCombined, dfCombined["genus_species"], test_size=testPercent, stratify=dfCombined["genus_species"], random_state=randomState)
+x_train, x_test, y_train, y_test = train_test_split(dfCombined, dfCombined[label], test_size=testPercent, stratify=dfCombined[label], random_state=randomState)
 print("\nX_train Genus Species:")
-print(*x_train["genus_species"].unique(),sep='\n')
+print(*x_train[label].unique(),sep='\n')
 print("\nX_test Genus Species:")
-print(*x_test["genus_species"].unique(),sep='\n')
+print(*x_test[label].unique(),sep='\n')
 
 # As it can be seen here, the training set and the testing set contain the same bird species. 
 
@@ -104,14 +111,14 @@ print(*x_test["genus_species"].unique(),sep='\n')
 fig1, ax1 = plt.subplots()
 fig1.subplots_adjust(bottom=0.28)
 fig1.set_size_inches(20, 10)
-dfTrainingSet["genus_species"].value_counts().plot.bar(ax=ax1)
+dfTrainingSet[label].value_counts().plot.bar(ax=ax1)
 plt.setp(ax1.get_xticklabels(), rotation=90)
 ax1.set_title("Genus - Species - Training Data")
 
 fig2, ax2 = plt.subplots()
 fig2.subplots_adjust(bottom=0.28)
 fig2.set_size_inches(20, 10)
-dfTestingSet["genus_species"].value_counts().plot.bar(ax=ax2)
+dfTestingSet[label].value_counts().plot.bar(ax=ax2)
 plt.setp(ax2.get_xticklabels(), rotation=90)
 ax2.set_title("Genus - Species - Testing Data")
 
@@ -124,20 +131,20 @@ ax2.set_title("Genus - Species - Testing Data")
 fig3, ax3 = plt.subplots()
 fig3.subplots_adjust(bottom=0.28)
 fig3.set_size_inches(20, 10)
-x_train["genus_species"].value_counts().plot.bar(ax=ax3)
+x_train[label].value_counts().plot.bar(ax=ax3)
 plt.setp(ax3.get_xticklabels(), rotation=90)
 ax3.set_title("Genus - Species - Own Training Data")
 
 fig4, ax4 = plt.subplots()
 fig4.subplots_adjust(bottom=0.28)
 fig4.set_size_inches(20, 10)
-x_test["genus_species"].value_counts().plot.bar(ax=ax4)
+x_test[label].value_counts().plot.bar(ax=ax4)
 plt.setp(ax4.get_xticklabels(), rotation=90)
 ax4.set_title("Genus - Species - Own Testing Data")
 
 
 
-#-- Heat Map --
+#-- Plot the Heat Maps --
 figHeat, axHeat = plt.subplots(1)
 figHeat.subplots_adjust(bottom=0.3)
 figHeat.set_size_inches(10, 40)
@@ -150,19 +157,101 @@ sns.heatmap(birdCorr, mask=birdMask, square=True,ax=axHeat).set(title='Bird Song
 # Regarding the chromograms there is overall a high correlation between the frames of the same pitch classes.
 # Interesting enough there seems to be a high correlation between a pitch class and the pitch class before it and chromogram 0 correlates hightly with the following chromograms 11, 1, and 2.
 
-
 figHeat2, axHeat2 = plt.subplots(1)
 figHeat2.subplots_adjust(bottom=0.3)
 figHeat2.set_size_inches(10, 40)
 dfBird2 = dfCombined[features]
 birdCorr2 = dfBird2.corr(method="spearman")
 birdMask2 = np.triu(np.ones_like(birdCorr2, dtype=bool))
-sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird Song Features- Full Set')
+sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird Song Features - Full Set')
 
 # The combined dataset does not indicates any real difference in the correlations.
 
 
-#-- Classifications --
+#-- Label Encoding for Fitting -- 
+labelEncoded = preprocessing.LabelEncoder().fit_transform(dfTrainingSet[label])
+
+#-- Classifications Original Training- and Testingset --
+
+#--- K-nearest Neighbour ---
+neigh = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
+
+neigh.fit(dfTrainingSet[features], labelEncoded)
+pred_test_k = neigh.predict(dfTestingSet[features])
+#pred_train_k = neigh.predict(dfTrainingSet[features])
+
+#---- Result ----
+print("\nK-Nearest Neighbour")
+print("test accuracy", str(np.mean(pred_test_k == labelEncoded)))
+print(classification_report(labelEncoded, pred_test_k))
+
+#---- Confusion Matrix ----
+figK, axK = plt.subplots(1)
+cmK = confusion_matrix(labelEncoded, pred_test_k, labels=neigh.classes_)
+dispK = ConfusionMatrixDisplay(confusion_matrix=cmK, display_labels=neigh.classes_)
+dispK.plot(ax=axK)
+axK.set_title("K-nearest neighbors")
+
+
+#--- Linear Stochastic Gradient Desent ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- Linear Support Vector Classication ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+#--- ---
+
+#---- Result ----
+
+#---- Confusion Matrix ----
+
+
+
+
+
+#-- Classifications Own Traning- and Testingset --
 
 #--- K-nearest Neighbour ---
 
@@ -189,7 +278,7 @@ sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird S
 
 
 
-#--- Support Vector Classification with Linear Kernal ---
+#--- Support Vector Classification with Linear Kernal --- #need to find the from ... import ... for this
 
 #---- Result ----
 
@@ -226,8 +315,6 @@ sns.heatmap(birdCorr2, mask=birdMask2, square=True,ax=axHeat2).set(title='Bird S
 #---- Result ----
 
 #---- Confusion Matrix ----
-
-
 
 
 
