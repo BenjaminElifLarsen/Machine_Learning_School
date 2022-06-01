@@ -161,6 +161,12 @@ x_test[label].value_counts().plot.bar(ax=ax4)
 plt.setp(ax4.get_xticklabels(), rotation=90)
 ax4.set_title("Genus - Species - Own Testing Data")
 
+fig5, ax5 = plt.subplots()
+fig5.subplots_adjust(bottom=0.28)
+fig5.set_size_inches(20, 10)
+dfCombined[label].value_counts().plot.bar(ax=ax5)
+plt.setp(ax5.get_xticklabels(), rotation=90)
+ax5.set_title("Genus - Species - All Data")
 
 #-- Plot the Heat Maps --
 figHeat1, axHeat1 = plt.subplots(1)
@@ -195,6 +201,9 @@ fig3.savefig('.\\' + ax3.get_title())
 plt.close(fig3)
 fig4.savefig('.\\' + ax4.get_title())
 plt.close(fig4)
+fig5.savefig('.\\' + ax5.get_title())
+plt.close(fig5)
+
 
 figHeat1.savefig('.\\' + axHeat1.get_title())
 plt.close(figHeat1)
@@ -346,7 +355,7 @@ axmlpnn.set_title("Multi-Layer Perceptron Neural Network")
 print("\nClassifications Own Traning- and Testingset")
 
 #--- K-nearest Neighbour ---
-neigh2 = KNeighborsClassifier(n_neighbors=y_train[label].unique().size)
+neigh2 = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
 neigh2.fit(x_train[features], y_train)
 pred_test_k2 = neigh2.predict(x_test[features])
 
@@ -382,7 +391,7 @@ axlsgd2.set_title("Linear SGD - True Random")
 
 
 #--- Linear Support Vector Classication ---
-lsvc2 = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3))
+lsvc2 = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3, max_iter=4000))
 lsvc2.fit(x_train[features], y_train)
 pred_test_lsvc2 = lsvc2.predict(x_test[features])
 
@@ -484,7 +493,7 @@ axmlpnn2.set_title("Multi-Layer Perceptron Neural Network - True Random")
 
 
 
-plt.show()
+#plt.show() # Uncomment to display confusion matrixs
 
 
 
