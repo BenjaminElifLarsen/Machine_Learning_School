@@ -346,51 +346,113 @@ axmlpnn.set_title("Multi-Layer Perceptron Neural Network")
 print("\nClassifications Own Traning- and Testingset")
 
 #--- K-nearest Neighbour ---
+neigh2 = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
+neigh2.fit(x_train[features], y_train)
+pred_test_k2 = neigh2.predict(x_test[features])
 
 #---- Result ----
-##print out test accuracy and classication report here
+print("\nK-Nearest Neighbour")
+print("test accuracy", str(np.mean(pred_test_k2 == y_test)))
+print(classification_report(y_test, pred_test_k2))
 
 #---- Confusion Matrix ----
-
+figK2, axK2 = plt.subplots(1)
+cmK2 = confusion_matrix(y_test, pred_test_k2, labels=neigh2.classes_)
+dispK2 = ConfusionMatrixDisplay(confusion_matrix=cmK2, display_labels=neigh2.classes_)
+dispK2.plot(ax=axK2)
+axK2.set_title("K-nearest neighbors - True Random")
 
 
 #--- Linear Stochastic Gradient Desent ---
+lsgd2 = make_pipeline(StandardScaler(), SGDClassifier( random_state=randomState, tol=1e-3))
+lsgd2.fit(x_train[features], y_train)
+pred_test_lsgd2 = lsgd2.predict(x_test[features])
 
 #---- Result ----
+print("\nLinear SGD")
+print("test accuracy", str(np.mean(pred_test_lsgd2 == y_test)))
+print(classification_report(y_test, pred_test_lsgd2))
 
 #---- Confusion Matrix ----
-
+figlsgd2, axlsgd2 = plt.subplots(1)
+cmlsgd2 = confusion_matrix(y_test, pred_test_lsgd2, labels=lsgd2.classes_)
+displsgd2 = ConfusionMatrixDisplay(confusion_matrix=cmlsgd2, display_labels=lsgd2.classes_)
+displsgd2.plot(ax=axlsgd2)
+axlsgd2.set_title("Linear SGD - True Random")
 
 
 #--- Linear Support Vector Classication ---
+lsvc2 = make_pipeline(StandardScaler(), LinearSVC( random_state=randomState, tol=1e-3))
+lsvc2.fit(x_train[features], y_train)
+pred_test_lsvc2 = lsvc2.predict(x_test[features])
 
 #---- Result ----
+print("\nLinear SVC")
+print("test accuracy", str(np.mean(pred_test_lsvc2 == y_test)))
+print(classification_report(y_test, pred_test_lsvc2))
 
 #---- Confusion Matrix ----
+figlsvc2, axlsvc2 = plt.subplots(1)
+cmlsvc2 = confusion_matrix(y_test, pred_test_lsvc2, labels=lsvc2.classes_)
+displsvc2 = ConfusionMatrixDisplay(confusion_matrix=cmlsvc2, display_labels=lsvc2.classes_)
+displsvc2.plot(ax=axlsvc2)
+axlsvc2.set_title("Linear SVC - True Random")
 
 
-
-#--- Support Vector Classification with Linear Kernal --- 
+#--- Support Vector Classification with Linear Kernal ---
+svclk2 = make_pipeline(StandardScaler(), SVC( kernel="linear", random_state=randomState, tol=1e-3))
+svclk2.fit(x_train[features], y_train)
+pred_test_svclk2 = svclk2.predict(x_test[features])
 
 #---- Result ----
+print("\nSVC Linear Kernel")
+print("test accuracy", str(np.mean(pred_test_svclk2 == y_test)))
+print(classification_report(y_test, pred_test_svclk2))
 
 #---- Confusion Matrix ----
-
+figsvclk2, axsvclk2 = plt.subplots(1)
+cmsvclk2 = confusion_matrix(y_test, pred_test_svclk2, labels=lsvc2.classes_)
+displaysvclk2 = ConfusionMatrixDisplay(confusion_matrix=cmsvclk2, display_labels=lsvc2.classes_)
+displaysvclk2.plot(ax=axsvclk2)
+axsvclk.set_title("SVC Linear Kernel - True Random")
 
 
 #--- Gaussian Naive Bayes ---
+gnb2 = make_pipeline(StandardScaler(), GaussianNB())
+gnb2.fit(x_train[features], y_train)
+pred_test_gnb2 = gnb2.predict(x_test[features])
 
 #---- Result ----
+print("\nGaussian Naive Bayes")
+print("test accuracy", str(np.mean(pred_test_gnb2 == y_test)))
+print(classification_report(y_test, pred_test_gnb2))
 
 #---- Confusion Matrix ----
+figgnb2, axgnb2 = plt.subplots(1)
+cmgnb2 = confusion_matrix(y_test, pred_test_gnb2, labels=gnb2.classes_)
+displaygnb2 = ConfusionMatrixDisplay(confusion_matrix=cmgnb2, display_labels=gnb2.classes_)
+displaygnb2.plot(ax=axgnb2)
+axgnb2.set_title("Gaussian Naive Bayes - True Random")
 
 
 
 #--- Decision Tree Classifier ---
+dtc2 = DecisionTreeClassifier(random_state=randomState)
+dtc2.fit(x_train[features], y_train)
+pred_test_dtc2 = dtc2.predict(x_test[features])
+
 
 #---- Result ----
+print("\nDecision Tree Classifier")
+print("test accuracy", str(np.mean(pred_test_dtc2 == y_test)))
+print(classification_report(y_test, pred_test_dtc2))
 
 #---- Confusion Matrix ----
+figdtc2, axdtc2 = plt.subplots(1)
+cmdtc2 = confusion_matrix(y_test, pred_test_dtc2, labels=dtc2.classes_)
+displaydtc2 = ConfusionMatrixDisplay(confusion_matrix=cmdtc2, display_labels=dtc2.classes_)
+displaydtc2.plot(ax=axdtc2)
+axdtc2.set_title("Decision Tree Classifier - True Random")
 
 
 
@@ -405,6 +467,11 @@ print("test accuracy", str(np.mean(pred_test_mlpnn2 == y_test)))
 print(classification_report(y_test, pred_test_mlpnn2))
 
 #---- Confusion Matrix ----
+figmlpnn2, axmlpnn2 = plt.subplots(1)
+cmmlpnn2 = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_mlpnn2, labels=mlpnn2.classes_)
+displaymlpnn2 = ConfusionMatrixDisplay(confusion_matrix=cmmlpnn2, display_labels=mlpnn2.classes_)
+displaymlpnn2.plot(ax=axmlpnn2)
+axmlpnn2.set_title("Multi-Layer Perceptron Neural Network - True Random")
 
 
 
