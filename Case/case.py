@@ -346,7 +346,7 @@ axmlpnn.set_title("Multi-Layer Perceptron Neural Network")
 print("\nClassifications Own Traning- and Testingset")
 
 #--- K-nearest Neighbour ---
-neigh2 = KNeighborsClassifier(n_neighbors=dfTrainingSet[label].unique().size)
+neigh2 = KNeighborsClassifier(n_neighbors=y_train[label].unique().size)
 neigh2.fit(x_train[features], y_train)
 pred_test_k2 = neigh2.predict(x_test[features])
 
@@ -468,7 +468,7 @@ print(classification_report(y_test, pred_test_mlpnn2))
 
 #---- Confusion Matrix ----
 figmlpnn2, axmlpnn2 = plt.subplots(1)
-cmmlpnn2 = confusion_matrix(dfTestingSet[labelEncodedColumnName], pred_test_mlpnn2, labels=mlpnn2.classes_)
+cmmlpnn2 = confusion_matrix(y_test, pred_test_mlpnn2, labels=mlpnn2.classes_)
 displaymlpnn2 = ConfusionMatrixDisplay(confusion_matrix=cmmlpnn2, display_labels=mlpnn2.classes_)
 displaymlpnn2.plot(ax=axmlpnn2)
 axmlpnn2.set_title("Multi-Layer Perceptron Neural Network - True Random")
