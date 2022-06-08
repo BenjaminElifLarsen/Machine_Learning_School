@@ -1,13 +1,13 @@
 Case:
-Identifikation af fugle. Visse fuglearter kan være svære at artsbestemme fra andre, samt nogle gange kan man ikke se fuglen.
+Identifikation af fugle. Visse fuglearter kan være svære at artsbestemme. Dette kan være fordi de ligner andre arter, de er kun aktive om natten, er menneskesky, samt nogle gange kan man ikke se fuglen.
 Datasæt:
-Alle features burde kunne bruges, da datasætttet er baseret ud fra et andet.
+Alle features burde kunne bruges, da datasætttet er baseret ud fra et andet, som indeholder lydfiler og information omkring disse filer.
 Selve datasættet består af features fra to grupper, Chromagrammer og Spectral Centroider.
 Algorithmen:
 Syv forskellige blev brugt for at se hvilken der var gode eller dårlige.
 De er alle sammen supervised.
 Et af dem er Deep Learning.
-Nogle af dem var tæt på hinanden, f.eks. Linear SVC og SVC linear kernel. Andre som Neural Network og Decision Tree Classifier er meget forskellige fra resten.
+Nogle af dem er tæt på hinanden, f.eks. Linear SVC og SVC linear kernel. Andre som Neural Network og Decision Tree Classifier er meget forskellige fra resten.
 	K-Nearest Neighbour
 	Linear SGD
 	Linear SVC
@@ -16,7 +16,8 @@ Nogle af dem var tæt på hinanden, f.eks. Linear SVC og SVC linear kernel. Andr
 	Decision Tree Classifier
 	Multi-Layer Perceptron Neural Network
 Konklusion: 
-Problemet kunne nok ikke løses uden Maskine Læring. 
+Problemet kunne nok ikke løses uden Maskine Læring, hvis man vil have det automatiseret. Selvfølgelig kunne ornitologer nok kunne art bestemme de fleste fugle ud fra deres lyde.
 Modelleren kunne nok forbedres via mere data i det balanceret træningssæt.
-En fugleart var ikke til stede i testsættet, samt visse fuglearter kunne har været bedre repræsenteret.
-F.eks. en fugleart kunne være svære at identifere, men for få til at det kunne blive opdaget i testsættet.
+En fugleart var ikke til stede i testsættet, samt visse fuglearter kunne har været bedre repræsenteret. F.eks. en fugleart kunne være svære at identifere, men for få til at det kunne blive opdaget i testsættet.
+De tilfældige opdelt træning- og testsæts klarede sig bedre, men dette kunne være pga. visse fulgearter var bedre repræsenteret i begge sæt end andre. 
+  
