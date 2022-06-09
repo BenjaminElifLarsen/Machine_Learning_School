@@ -1,8 +1,8 @@
 Case:
-Identifikation af fugle. Visse fuglearter kan være svære at artsbestemme. Dette kan være fordi de ligner andre arter, de er kun aktive om natten, er menneskesky, samt nogle gange kan man ikke se fuglen.
+Identifikation af fugle. Visse fuglearter kan være svære at artsbestemme. Dette kan være fordi de ligner andre arter (buskrørsangeren ligner kærsangeren), de kan være aktive lun om natten, er menneskesky, eller svære at spotte
 Datasæt:
 Alle features burde kunne bruges, da datasætttet er baseret ud fra et andet, som indeholder lydfiler og information omkring disse filer.
-Selve datasættet består af features fra to grupper, Chromagrammer og Spectral Centroider.
+Selve datasættet består af features fra to grupper, Chromagrammer og Spectral Centroider fra 13 spectrogrammer.
 Algorithmen:
 Syv forskellige blev brugt for at se hvilken der var gode eller dårlige.
 De er alle sammen supervised.
@@ -17,7 +17,9 @@ Nogle af dem er tæt på hinanden, f.eks. Linear SVC og SVC linear kernel. Andre
 	Multi-Layer Perceptron Neural Network
 Konklusion: 
 Problemet kunne nok ikke løses uden Maskine Læring, hvis man vil have det automatiseret. Selvfølgelig kunne ornitologer nok kunne art bestemme de fleste fugle ud fra deres lyde.
-Modelleren kunne nok forbedres via mere data i det balanceret træningssæt.
-En fugleart var ikke til stede i testsættet, samt visse fuglearter kunne har været bedre repræsenteret. F.eks. en fugleart kunne være svære at identifere, men for få til at det kunne blive opdaget i testsættet.
-De tilfældige opdelt træning- og testsæts klarede sig bedre, men dette kunne være pga. visse fulgearter var bedre repræsenteret i begge sæt end andre. 
+Modelleren kunne nok forbedres via mere data i det balanceret træningssæt. Mere data er altid bedre, dog er der et problem med antallet af visse arter i datasættet, hvilken sætte en grænsen på hvor meget data der kan være i det balanceret træningsæt. 
+En fugleart var ikke til stede i testsættet, samt visse fuglearter kunne har været bedre repræsenteret. F.eks. en fugleart kunne være svære at identifere, men for få til at det kunne blive opdaget i testsættet (Sanglærken er der næsten 1750 gange i forhold til den gule vipstjert [som ikke var i testsættet] som der næsten er ingen af). Med dette menes der at en høj præsension kan opnåes, selv hvis den fejler 100 % på en eller flere under repræsenteret arter, men klare sig fint på de høj repræsenteret arter. 
+Nogle fuglearter lyder meget som andre, andre er meget unik som Rørdrummen, og nogle arter har forskellige sange/lyde alt efter hvor de er fra. 
+De tilfældige opdelt træning- og testsæts klarede sig bedre, men dette kunne være pga. visse fulgearter var bedre repræsenteret i begge sæt end andre. De fleste fugle kommer fra 7-9 arter. 
+For at se resultaterne fra de forskellige algorithmer bedes der henvises til Presentation/Presentation.pptx.
   
