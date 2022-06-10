@@ -4,7 +4,7 @@ Datasæt:
 Alle features burde kunne bruges, da datasætttet er baseret ud fra et andet, som indeholder lydfiler og information omkring disse filer.
 Selve datasættet består af features fra to grupper, Chromagrammer og Spectral Centroider fra 13 spectrogrammer.
 Algorithmen:
-Syv forskellige blev brugt for at se hvilken der var gode eller dårlige.
+Syv forskellige blev brugt for at se hvilken der kunne løse problemmet bedst.
 De er alle sammen supervised.
 Et af dem er Deep Learning.
 Nogle af dem er tæt på hinanden, f.eks. Linear SVC og SVC linear kernel. Andre som Neural Network og Decision Tree Classifier er meget forskellige fra resten.
